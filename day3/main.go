@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -13,7 +14,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := PowerConsumption(input)
+	//result := PowerConsumption(input)
+	result := LifeSupport(input)
 
 	fmt.Println(result)
 }
@@ -34,6 +36,70 @@ func PowerConsumption(input []string) int {
 	}
 
 	return gamma * epsilon
+}
+
+func LifeSupport(input []string) int64 {
+	oxygenRatingString := oxygen(input, 0)
+	co2RatingString := co2(input, 0)
+
+	oxygenRating, _ := strconv.ParseInt(oxygenRatingString, 2, 0)
+	co2Rating, _ := strconv.ParseInt(co2RatingString, 2, 0)
+
+	return oxygenRating * co2Rating
+}
+
+func oxygen(lines []string, column int) string {
+	if len(lines) == 1 {
+		return lines[0]
+	}
+
+	s := columnSum(lines, column)
+	if s >= len(lines)/2+len(lines)%2 {
+		lines = filter(lines, column, '1')
+	} else {
+		lines = filter(lines, column, '0')
+	}
+
+	return oxygen(lines, column+1)
+}
+
+func co2(lines []string, column int) string {
+	if len(lines) == 1 {
+		return lines[0]
+	}
+
+	s := columnSum(lines, column)
+	if s >= len(lines)/2+len(lines)%2 {
+		lines = filter(lines, column, '0')
+	} else {
+		lines = filter(lines, column, '1')
+	}
+
+	return co2(lines, column+1)
+}
+
+func columnSum(lines []string, column int) int {
+	var sum int
+
+	for _, line := range lines {
+		if line[column] == '1' {
+			sum++
+		}
+	}
+
+	return sum
+}
+
+func filter(lines []string, column int, bit byte) []string {
+	res := make([]string, 0, len(lines))
+
+	for _, line := range lines {
+		if line[column] == bit {
+			res = append(res, line)
+		}
+	}
+
+	return res
 }
 
 func countBits(input []string) []int {
