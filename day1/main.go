@@ -14,15 +14,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := SonarSweep(input)
+	result := SonarSweep(input, 3)
 
 	fmt.Println(result)
 }
 
-func SonarSweep(depths []int) int {
+func SonarSweep(depths []int, groupSize int) int {
 	var counter int
-	for i := 1; i < len(depths); i++ {
-		if depths[i] > depths[i-1] {
+	for i := groupSize; i < len(depths); i++ {
+		if depths[i] > depths[i-groupSize] {
 			counter++
 		}
 	}
