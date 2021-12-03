@@ -6,10 +6,16 @@ func TestSonarSweep(t *testing.T) {
 	tests := []struct {
 		inputFile string
 		expected  int
-	}{{
-		inputFile: "input_test.txt",
-		expected:  7,
-	}}
+	}{
+		{
+			inputFile: "input_test.txt",
+			expected:  7,
+		},
+		{
+			inputFile: "input.txt",
+			expected:  1581,
+		},
+	}
 
 	for _, tt := range tests {
 		input, err := readInput(tt.inputFile)
