@@ -19,8 +19,15 @@ func main() {
 	fmt.Println(result)
 }
 
-func SonarSweep([]int) int {
-	return 0
+func SonarSweep(depths []int) int {
+	var counter int
+	for i := 1; i < len(depths); i++ {
+		if depths[i] > depths[i-1] {
+			counter++
+		}
+	}
+
+	return counter
 }
 
 func readInput(filename string) ([]int, error) {
