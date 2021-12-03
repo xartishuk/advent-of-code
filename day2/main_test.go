@@ -30,3 +30,32 @@ func TestPosition(t *testing.T) {
 		}
 	}
 }
+
+func TestAimedPosition(t *testing.T) {
+	tests := []struct {
+		inputFile string
+		expected  int
+	}{
+		{
+			inputFile: "input_test.txt",
+			expected:  900,
+		},
+		{
+			inputFile: "input.txt",
+			expected:  2006917119,
+		},
+	}
+
+	for _, tt := range tests {
+		input, err := readInput(tt.inputFile)
+		if err != nil {
+			t.Error(err)
+		}
+
+		result := AimedPosition(input)
+
+		if result != tt.expected {
+			t.Errorf("expected %d, got %d", tt.expected, result)
+		}
+	}
+}

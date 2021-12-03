@@ -16,7 +16,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := Position(input)
+	//result := Position(input)
+	result := AimedPosition(input)
 
 	fmt.Println(result)
 }
@@ -37,6 +38,24 @@ func Position(in <-chan Input) int {
 			depth -= v.Amount
 		case "down":
 			depth += v.Amount
+		}
+	}
+
+	return depth * horizontal
+}
+
+func AimedPosition(in <-chan Input) int {
+	var aim, depth, horizontal int
+
+	for v := range in {
+		switch v.Direction {
+		case "forward":
+			horizontal += v.Amount
+			depth += aim * v.Amount
+		case "up":
+			aim -= v.Amount
+		case "down":
+			aim += v.Amount
 		}
 	}
 
