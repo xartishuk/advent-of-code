@@ -27,11 +27,20 @@ type Input struct {
 }
 
 func Position(in <-chan Input) int {
+	var depth, horizontal int
+
 	for v := range in {
-		_ = v
+		switch v.Direction {
+		case "forward":
+			horizontal += v.Amount
+		case "up":
+			depth -= v.Amount
+		case "down":
+			depth += v.Amount
+		}
 	}
 
-	return 0
+	return depth * horizontal
 }
 
 func readInput(filename string) (<-chan Input, error) {

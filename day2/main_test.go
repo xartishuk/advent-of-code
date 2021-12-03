@@ -13,7 +13,7 @@ func TestPosition(t *testing.T) {
 		},
 		{
 			inputFile: "input.txt",
-			expected:  0,
+			expected:  1989014,
 		},
 	}
 
