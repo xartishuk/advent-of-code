@@ -20,3 +20,6 @@ jobs:
 
     - name: Test Day 1
       run: cd day1 && go test -v ./... && cd ..
+
+    - name: Test Day 2
+      run: cd day2 && go test -v ./... && cd ..
