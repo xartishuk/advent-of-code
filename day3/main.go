@@ -19,7 +19,35 @@ func main() {
 }
 
 func PowerConsumption(input []string) int {
-	return 0
+	bitCount := countBits(input)
+
+	var gamma, epsilon int
+
+	for _, numOfOnes := range bitCount {
+		gamma <<= 1
+		epsilon <<= 1
+		if numOfOnes > len(input)/2 {
+			gamma += 1
+		} else {
+			epsilon += 1
+		}
+	}
+
+	return gamma * epsilon
+}
+
+func countBits(input []string) []int {
+	counter := make([]int, len(input[0]))
+
+	for _, line := range input {
+		for i, bit := range line {
+			if bit == '1' {
+				counter[i]++
+			}
+		}
+	}
+
+	return counter
 }
 
 func readInput(filename string) ([]string, error) {

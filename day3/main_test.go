@@ -13,7 +13,7 @@ func TestPowerConsumption(t *testing.T) {
 		},
 		{
 			inputFile: "input.txt",
-			expected:  0,
+			expected:  4147524,
 		},
 	}
 
