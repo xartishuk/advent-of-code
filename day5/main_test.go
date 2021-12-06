@@ -13,7 +13,7 @@ func TestHydrothermal(t *testing.T) {
 		},
 		{
 			inputFile: "input.txt",
-			expected:  0,
+			expected:  6225,
 		},
 	}
 
