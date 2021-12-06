@@ -11,15 +11,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := Lanternfish(input)
+	result := Lanternfish(input, 256)
 
 	fmt.Println(result)
 }
 
-func Lanternfish(ages []byte) int {
+func Lanternfish(ages []byte, days int) int {
 	school := newSchool(ages)
 
-	for i := 0; i < 80; i++ {
+	for i := 0; i < days; i++ {
 		school = school.AfterADay()
 	}
 
