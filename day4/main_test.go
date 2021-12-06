@@ -13,7 +13,7 @@ func TestBingo(t *testing.T) {
 		},
 		{
 			inputFile: "input.txt",
-			expected:  0,
+			expected:  58838,
 		},
 	}
 

@@ -40,7 +40,7 @@ func readInput(filename string) (input, error) {
 			break
 		}
 
-		var board Board
+		board := initBoard()
 		// scan board
 		for i := 0; i < boardSize; i++ {
 			s.Scan()
@@ -55,4 +55,15 @@ func readInput(filename string) (input, error) {
 	}
 
 	return res, s.Err()
+}
+
+func initBoard() Board {
+	var b Board
+	for i := range b {
+		for j := range b[i] {
+			b[i][j] = new(BingoCell)
+		}
+	}
+
+	return b
 }
