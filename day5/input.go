@@ -32,9 +32,28 @@ func readInput(filename string) ([]Vector, error) {
 		vector.From.Y, _ = strconv.Atoi(pointsString[1])
 		vector.To.X, _ = strconv.Atoi(pointsString[2])
 		vector.To.Y, _ = strconv.Atoi(pointsString[3])
+		vector.Direction = direction(vector.From, vector.To)
 
 		res = append(res, vector)
 	}
 
 	return res, s.Err()
+}
+
+func direction(p1, p2 Point) Point {
+	var dir Point
+	if p1.X > p2.X {
+		dir.X = -1
+	}
+	if p1.X < p2.X {
+		dir.X = 1
+	}
+	if p1.Y > p2.Y {
+		dir.Y = -1
+	}
+	if p1.Y < p2.Y {
+		dir.Y = 1
+	}
+
+	return dir
 }

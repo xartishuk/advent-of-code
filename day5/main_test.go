@@ -1,19 +1,34 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestHydrothermal(t *testing.T) {
 	tests := []struct {
-		inputFile string
-		expected  int
+		inputFile        string
+		filterOrthogonal bool
+		expected         int
 	}{
 		{
-			inputFile: "input_test.txt",
-			expected:  5,
+			inputFile:        "input_test.txt",
+			filterOrthogonal: true,
+			expected:         5,
 		},
 		{
-			inputFile: "input.txt",
-			expected:  6225,
+			inputFile:        "input.txt",
+			filterOrthogonal: true,
+			expected:         6225,
+		},
+		{
+			inputFile:        "input_test.txt",
+			filterOrthogonal: false,
+			expected:         12,
+		},
+		{
+			inputFile:        "input.txt",
+			filterOrthogonal: false,
+			expected:         22116,
 		},
 	}
 
@@ -23,7 +38,7 @@ func TestHydrothermal(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := Hydrothermal(input)
+		result := Hydrothermal(input, tt.filterOrthogonal)
 
 		if result != tt.expected {
 			t.Errorf("expected %d, got %d", tt.expected, result)

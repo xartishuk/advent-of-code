@@ -13,31 +13,28 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := Hydrothermal(input)
+	result := Hydrothermal(input, false)
 
 	fmt.Println(result)
 }
 
-func Hydrothermal(vectors []Vector) int {
+func Hydrothermal(vectors []Vector, filterOrthogonal bool) int {
 	// filter orthogonal vectors
-	orthogonalVectors := make([]Vector, 0, len(vectors))
-	for _, vector := range vectors {
-		if vector.IsOrthogonal() {
-			orthogonalVectors = append(orthogonalVectors, vector)
+	if filterOrthogonal {
+		orthogonalVectors := make([]Vector, 0, len(vectors))
+		for _, vector := range vectors {
+			if vector.IsOrthogonal() {
+				orthogonalVectors = append(orthogonalVectors, vector)
+			}
 		}
+
+		vectors = orthogonalVectors
 	}
 
-	// make vectors point in the same direction
-	for i, v := range orthogonalVectors {
-		if v.To.X < v.From.X || v.To.Y < v.From.Y {
-			orthogonalVectors[i].SwapDirection()
-		}
-	}
-
-	max := maxPoint(orthogonalVectors)
+	max := maxPoint(vectors)
 	floor := createFloor(max)
 
-	for _, vector := range orthogonalVectors {
+	for _, vector := range vectors {
 		floor.ApplyVector(vector)
 	}
 
@@ -45,8 +42,9 @@ func Hydrothermal(vectors []Vector) int {
 }
 
 type Vector struct {
-	From Point
-	To   Point
+	From      Point
+	To        Point
+	Direction Point
 }
 
 type Point struct {
@@ -54,36 +52,23 @@ type Point struct {
 	Y int
 }
 
-func (v *Vector) IsOrthogonal() bool {
-	return v.IsVertical() || v.IsHorizontal()
-}
-
-func (v *Vector) IsVertical() bool {
-	return v.From.X == v.To.X
-}
-
-func (v *Vector) IsHorizontal() bool {
-	return v.From.Y == v.To.Y
-}
-
-func (v *Vector) SwapDirection() {
-	v.From, v.To = v.To, v.From
+func (v Vector) IsOrthogonal() bool {
+	return v.From.X == v.To.X || v.From.Y == v.To.Y
 }
 
 type Floor [][]int
 
 func (f Floor) ApplyVector(v Vector) {
-	if v.IsVertical() {
-		for j := v.From.Y; j <= v.To.Y; j++ {
-			f[v.From.X][j]++
-		}
-	} else if v.IsHorizontal() {
-		for i := v.From.X; i <= v.To.X; i++ {
-			f[i][v.From.Y]++
-		}
-	} else {
-		panic("unreachable for orthogonal")
+	i := v.From.X
+	j := v.From.Y
+	for i != v.To.X || j != v.To.Y {
+		f[i][j]++
+
+		i += v.Direction.X
+		j += v.Direction.Y
 	}
+
+	f[v.To.X][v.To.Y]++
 }
 
 func (f Floor) CountDangerous() int {
