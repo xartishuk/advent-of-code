@@ -5,15 +5,24 @@ import "testing"
 func TestBingo(t *testing.T) {
 	tests := []struct {
 		inputFile string
-		expected  int
+		expected  struct {
+			first int
+			last  int
+		}
 	}{
 		{
 			inputFile: "input_test.txt",
-			expected:  4512,
+			expected: struct {
+				first int
+				last  int
+			}{first: 4512, last: 1924},
 		},
 		{
 			inputFile: "input.txt",
-			expected:  58838,
+			expected: struct {
+				first int
+				last  int
+			}{first: 58838, last: 6256},
 		},
 	}
 
@@ -23,10 +32,13 @@ func TestBingo(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := Bingo(input.numbersDrawn, input.boards)
+		first, last := Bingo(input.numbersDrawn, input.boards)
 
-		if result != tt.expected {
-			t.Errorf("expected %d, got %d", tt.expected, result)
+		if first != tt.expected.first {
+			t.Errorf("expected first to be %d, got %d", tt.expected.first, first)
+		}
+		if last != tt.expected.last {
+			t.Errorf("expected last to be %d, got %d", tt.expected.last, last)
 		}
 	}
 }

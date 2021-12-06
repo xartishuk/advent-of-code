@@ -11,38 +11,58 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := Bingo(input.numbersDrawn, input.boards)
+	first, last := Bingo(input.numbersDrawn, input.boards)
 
-	fmt.Println(result)
+	fmt.Println(first, last)
 }
 
 const boardSize = 5
 
-type Board [boardSize][boardSize]*BingoCell
+type Board struct {
+	IsCompleted bool
+
+	cells [boardSize][boardSize]*BingoCell
+}
 
 type BingoCell struct {
 	number    int
 	isCrossed bool
 }
 
-func Bingo(numbersDrawn []int, boards []Board) int {
+func Bingo(numbersDrawn []int, boards []Board) (first, last int) {
+	first, last = -1, -1
+
 	for _, numberDrawn := range numbersDrawn {
-		for _, board := range boards {
-			if board.Cross(numberDrawn) {
-				return board.SumOfUncrossed() * numberDrawn
+		for i := range boards {
+			if boards[i].IsCompleted {
+				continue
+			}
+
+			boards[i].Cross(numberDrawn)
+			if boards[i].IsCompleted {
+				// save score
+				score := boards[i].SumOfUncrossed() * numberDrawn
+				if first == -1 {
+					first = score
+				}
+				last = score
 			}
 		}
 	}
 
-	return -1
+	return first, last
 }
 
-// Cross crosses number on board and returns true if board is complete
-func (b *Board) Cross(num int) bool {
-	for i := range b {
-		for j := range b[i] {
-			if num == b[i][j].number {
-				b[i][j].isCrossed = true
+// Cross crosses number on board updates IsComplete
+func (b *Board) Cross(num int) {
+	b.IsCompleted = b.cross(num)
+}
+
+func (b *Board) cross(num int) bool {
+	for i := range b.cells {
+		for j := range b.cells[i] {
+			if num == b.cells[i][j].number {
+				b.cells[i][j].isCrossed = true
 
 				return b.isCrossedOn(i, j)
 			}
@@ -58,7 +78,7 @@ func (b *Board) isCrossedOn(row, column int) bool {
 
 func (b *Board) isRowCrossed(row int) bool {
 	for j := 0; j < boardSize; j++ {
-		if !b[row][j].isCrossed {
+		if !b.cells[row][j].isCrossed {
 			return false
 		}
 	}
@@ -68,7 +88,7 @@ func (b *Board) isRowCrossed(row int) bool {
 
 func (b *Board) isColumnCrossed(column int) bool {
 	for i := 0; i < boardSize; i++ {
-		if !b[i][column].isCrossed {
+		if !b.cells[i][column].isCrossed {
 			return false
 		}
 	}
@@ -78,10 +98,10 @@ func (b *Board) isColumnCrossed(column int) bool {
 
 func (b *Board) SumOfUncrossed() int {
 	var sum int
-	for i := range b {
-		for j := range b[i] {
-			if !b[i][j].isCrossed {
-				sum += b[i][j].number
+	for i := range b.cells {
+		for j := range b.cells[i] {
+			if !b.cells[i][j].isCrossed {
+				sum += b.cells[i][j].number
 			}
 		}
 	}

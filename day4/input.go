@@ -47,7 +47,7 @@ func readInput(filename string) (input, error) {
 			row := strings.Fields(s.Text())
 
 			for j, numString := range row {
-				board[i][j].number, _ = strconv.Atoi(numString)
+				board.cells[i][j].number, _ = strconv.Atoi(numString)
 			}
 		}
 
@@ -59,9 +59,9 @@ func readInput(filename string) (input, error) {
 
 func initBoard() Board {
 	var b Board
-	for i := range b {
-		for j := range b[i] {
-			b[i][j] = new(BingoCell)
+	for i := range b.cells {
+		for j := range b.cells[i] {
+			b.cells[i][j] = new(BingoCell)
 		}
 	}
 
