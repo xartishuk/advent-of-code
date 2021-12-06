@@ -29,3 +29,6 @@ jobs:
 
     - name: Test Day 4
       run: cd day4 && go test -v ./... && cd ..
+
+    - name: Test Day 5
+      run: cd day5 && go test -v ./... && cd ..
