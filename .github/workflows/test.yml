@@ -18,20 +18,8 @@ jobs:
       with:
         go-version: 1.17
 
-    - name: Test Day 1
-      run: cd day1 && go test -v ./... && cd ..
+    - name: Test 2021
+      run: cd 2021 && go test -v ./... && cd ..
 
-    - name: Test Day 2
-      run: cd day2 && go test -v ./... && cd ..
-
-    - name: Test Day 3
-      run: cd day3 && go test -v ./... && cd ..
-
-    - name: Test Day 4
-      run: cd day4 && go test -v ./... && cd ..
-
-    - name: Test Day 5
-      run: cd day5 && go test -v ./... && cd ..
-
-    - name: Test Day 6
-      run: cd day6 && go test -v ./... && cd ..
+    - name: Test 2022
+      run: cd 2022 && go test -v ./... && cd ..
