@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
+	"strings"
 )
 
 func main() {
@@ -11,61 +13,113 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := SyntaxScoring(input)
+	corrupted, incomplete := SyntaxScoring(input)
 
-	fmt.Println(result)
+	fmt.Println(corrupted)
+	fmt.Println(incomplete)
 }
 
-var pointsPerBracket = map[rune]int{
-	0:   0,
+var pointsForCorrupted = map[rune]int{
 	')': 3,
 	']': 57,
 	'}': 1197,
 	'>': 25137,
 }
 
-func SyntaxScoring(lines []string) int {
-	var pointTotal int
-
-	for _, l := range lines {
-		pointTotal += pointsPerBracket[Line(l).corruptedOn()]
-	}
-
-	return pointTotal
+var pointsForIncomplete = map[rune]int{
+	')': 1,
+	']': 2,
+	'}': 3,
+	'>': 4,
 }
 
-type Line string
+func SyntaxScoring(lines []string) (corrupted, middleIncomplete int) {
+	incompleteScores := make([]int, 0, len(lines))
 
-func (l Line) corruptedOn() rune {
+	for _, l := range lines {
+		line := NewLine(l)
+
+		if line.CorruptedOn() != 0 {
+			corrupted += pointsForCorrupted[line.CorruptedOn()]
+		} else {
+			incompleteScores = append(incompleteScores, incompleteScore(line))
+		}
+	}
+
+	return corrupted, middle(incompleteScores)
+}
+
+func NewLine(l string) Line {
+	stack, corruptedOn := formStack(l)
+
+	return Line{
+		l:           l,
+		stack:       stack,
+		corruptedOn: corruptedOn,
+	}
+}
+
+type Line struct {
+	l string
+
+	stack *bracketStack
+
+	corruptedOn rune
+}
+
+func formStack(l string) (*bracketStack, rune) {
 	var stack bracketStack
 
 	for _, bracket := range l {
 		switch bracket {
-		case '<', '(', '{', '[':
-			stack.push(bracket)
-		case '>', ')', '}', ']':
-			top := stack.pop()
+		case '(', '[', '{', '<':
+			stack.Push(bracket)
+		case ')', ']', '}', '>':
+			top := stack.Pop()
 
 			if !match(bracket, top) {
-				return bracket
+				return nil, bracket
 			}
 		default:
 			panic(bracket)
 		}
 	}
 
-	return 0
+	return &stack, 0
+}
+
+func (l *Line) CorruptedOn() rune {
+	return l.corruptedOn
+}
+
+func (l *Line) MissingPart() string {
+	closers := strings.Builder{}
+
+	for {
+		top := l.stack.Pop()
+		if top == 0 {
+			break
+		}
+
+		closers.WriteRune(opposite(top))
+	}
+
+	return closers.String()
 }
 
 type bracketStack struct {
 	arr []rune
 }
 
-func (s *bracketStack) push(bracket rune) {
+func (s *bracketStack) Push(bracket rune) {
 	s.arr = append(s.arr, bracket)
 }
 
-func (s *bracketStack) pop() rune {
+func (s *bracketStack) Pop() rune {
+	if len(s.arr) == 0 {
+		return 0
+	}
+
 	top := s.arr[len(s.arr)-1]
 
 	s.arr = s.arr[:len(s.arr)-1]
@@ -74,16 +128,43 @@ func (s *bracketStack) pop() rune {
 }
 
 func match(close, open rune) bool {
-	switch close {
-	case '>':
-		return open == '<'
+	return opposite(close) == open
+}
+
+func opposite(r rune) rune {
+	switch r {
+	case '(':
+		return ')'
 	case ')':
-		return open == '('
-	case '}':
-		return open == '{'
+		return '('
+	case '[':
+		return ']'
 	case ']':
-		return open == '['
+		return '['
+	case '{':
+		return '}'
+	case '}':
+		return '{'
+	case '<':
+		return '>'
+	case '>':
+		return '<'
 	default:
-		panic("wrong match usage")
+		panic(r)
 	}
+}
+
+func incompleteScore(l Line) (score int) {
+	for _, bracket := range l.MissingPart() {
+		score *= 5
+		score += pointsForIncomplete[bracket]
+	}
+
+	return score
+}
+
+func middle(values []int) int {
+	sort.Ints(values)
+
+	return values[len(values)/2]
 }

@@ -4,18 +4,21 @@ import (
 	"testing"
 )
 
-func TestWhaleChase(t *testing.T) {
+func TestSyntaxScoring(t *testing.T) {
 	tests := []struct {
-		inputFile string
-		expected  int
+		inputFile  string
+		corrupted  int
+		incomplete int
 	}{
 		{
-			inputFile: "input_test.txt",
-			expected:  26397,
+			inputFile:  "input_test.txt",
+			corrupted:  26397,
+			incomplete: 288957,
 		},
 		{
-			inputFile: "input.txt",
-			expected:  319233,
+			inputFile:  "input.txt",
+			corrupted:  319233,
+			incomplete: 1118976874,
 		},
 	}
 
@@ -25,10 +28,13 @@ func TestWhaleChase(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := SyntaxScoring(input)
+		corrupted, incomplete := SyntaxScoring(input)
 
-		if result != tt.expected {
-			t.Errorf("expected %d, got %d", tt.expected, result)
+		if corrupted != tt.corrupted {
+			t.Errorf("expected %d, got %d", tt.corrupted, corrupted)
+		}
+		if incomplete != tt.incomplete {
+			t.Errorf("expected %d, got %d", tt.incomplete, incomplete)
 		}
 	}
 }
