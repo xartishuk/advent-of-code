@@ -19,17 +19,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	convertXYZAsSigns(p2)
-
 	result := RPS(p1, p2)
 
 	fmt.Println(result)
-}
-
-func convertXYZAsSigns(p2 []rune) {
-	for i := range p2 {
-		p2[i] = p2[i] - AXDiff
-	}
 }
 
 func convertXYZAsOutcomes(p1, p2 []rune) {
@@ -56,33 +48,27 @@ func RPS(p1 []rune, p2 []rune) int {
 }
 
 func selectScore(r rune) int {
-	return int(r) - AOffset
+	score := int(r) % 3
+	if score == 0 {
+		score = 3
+	}
+
+	fmt.Printf("score for %c is %d\n", r, score)
+
+	return score
 }
 
 func roundScore(p1, p2 rune) int {
-	switch p1 - p2 {
+	switch (p1 - p2 + 2) % 3 {
 	case 0:
-		fmt.Printf("%c %c: %s(%c) draws %s(%c)\n", p1, p2, name(p2), p2, name(p1), p1)
+		fmt.Printf("%c %c: %c draws %c\n", p1, p2, p2, p1)
 		return 3
 	case -1, 2:
-		fmt.Printf("%c %c: %s(%c) wins over %s(%c)\n", p1, p2, name(p2), p2, name(p1), p1)
+		fmt.Printf("%c %c: %c wins over %c\n", p1, p2, p2, p1)
 		return 6
 	case 1, -2:
-		fmt.Printf("%c %c: %s(%c) loses to %s(%c)\n", p1, p2, name(p2), p2, name(p1), p1)
+		fmt.Printf("%c %c: %c loses to %c\n", p1, p2, p2, p1)
 		return 0
-	}
-
-	panic("unreachable")
-}
-
-func name(r rune) string {
-	switch r {
-	case 'A':
-		return "Rock"
-	case 'B':
-		return "Paper"
-	case 'C':
-		return "Scissors"
 	}
 
 	panic("unreachable")

@@ -23,8 +23,6 @@ func TestRPS_Part1(t *testing.T) {
 			t.Error(err)
 		}
 
-		convertXYZAsSigns(p2)
-
 		result := RPS(p1, p2)
 
 		if result != tt.expected {
@@ -32,10 +30,4 @@ func TestRPS_Part1(t *testing.T) {
 		}
 	}
 }
-		result := RPS(p1, p2)
 
-		if result != tt.expected {
-			t.Errorf("expected %d, got %d", tt.expected, result)
-		}
-	}
-}
