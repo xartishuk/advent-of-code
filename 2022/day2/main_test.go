@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestRPS(t *testing.T) {
+func TestRPS_Part1(t *testing.T) {
 	tests := []struct {
 		inputFile string
 		expected  int
@@ -23,6 +23,15 @@ func TestRPS(t *testing.T) {
 			t.Error(err)
 		}
 
+		convertXYZAsSigns(p2)
+
+		result := RPS(p1, p2)
+
+		if result != tt.expected {
+			t.Errorf("expected %d, got %d", tt.expected, result)
+		}
+	}
+}
 		result := RPS(p1, p2)
 
 		if result != tt.expected {

@@ -9,6 +9,7 @@ import (
 
 const (
 	XOffset = 87
+	AOffset = 64
 	AXDiff  = 23
 )
 
@@ -18,9 +19,30 @@ func main() {
 		log.Fatal(err)
 	}
 
+	convertXYZAsSigns(p2)
+
 	result := RPS(p1, p2)
 
 	fmt.Println(result)
+}
+
+func convertXYZAsSigns(p2 []rune) {
+	for i := range p2 {
+		p2[i] = p2[i] - AXDiff
+	}
+}
+
+func convertXYZAsOutcomes(p1, p2 []rune) {
+	for i := range p2 {
+		switch p2[i] {
+		case 'X':
+			// TODO: +1
+		case 'Y':
+			p2[i] = p1[i]
+		case 'Z':
+			// TODO: -1
+		}
+	}
 }
 
 func RPS(p1 []rune, p2 []rune) int {
@@ -34,11 +56,11 @@ func RPS(p1 []rune, p2 []rune) int {
 }
 
 func selectScore(r rune) int {
-	return int(r) - XOffset
+	return int(r) - AOffset
 }
 
 func roundScore(p1, p2 rune) int {
-	switch p1 - p2 + AXDiff {
+	switch p1 - p2 {
 	case 0:
 		fmt.Printf("%c %c: %s(%c) draws %s(%c)\n", p1, p2, name(p2), p2, name(p1), p1)
 		return 3
@@ -55,11 +77,11 @@ func roundScore(p1, p2 rune) int {
 
 func name(r rune) string {
 	switch r {
-	case 'A', 'X':
+	case 'A':
 		return "Rock"
-	case 'B', 'Y':
+	case 'B':
 		return "Paper"
-	case 'C', 'Z':
+	case 'C':
 		return "Scissors"
 	}
 
