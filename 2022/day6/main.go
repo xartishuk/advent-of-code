@@ -13,30 +13,29 @@ func main() {
 		log.Fatal(err)
 	}
 
-	res := TuningMarker(in)
+	res := TuningMarker(in, 4)
 
 	fmt.Println(res)
 }
 
-func TuningMarker(s string) int {
-	for i := 3; i < len(s); i++ {
-		if allUnique(s[i-3], s[i-2], s[i-1], s[i]) {
-			return i + 1
+func TuningMarker(s string, length int) int {
+	for i := length; i <= len(s); i++ {
+		if allUnique(s[i-length : i]) {
+			return i
 		}
 	}
 
 	panic("couldn't find marker")
 }
 
-func allUnique(r1, r2, r3, r4 uint8) bool {
-	m := map[uint8]struct{}{
-		r1: {},
-		r2: {},
-		r3: {},
-		r4: {},
+func allUnique(s string) bool {
+	m := map[uint8]struct{}{}
+
+	for i := range s {
+		m[s[i]] = struct{}{}
 	}
 
-	return len(m) == 4
+	return len(m) == len(s)
 }
 
 func readInput(filename string) (string, error) {
