@@ -3,9 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/xartishuk/advent-of-code/util"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -81,15 +81,20 @@ func readInput(filename string) ([]AssignmentPair, error) {
 
 		res = append(res, AssignmentPair{
 			A1: Assignment{
-				Start: util.MustAtoi(a1Sections[0]),
-				End:   util.MustAtoi(a1Sections[1]),
+				Start: mustAtoi(a1Sections[0]),
+				End:   mustAtoi(a1Sections[1]),
 			},
 			A2: Assignment{
-				Start: util.MustAtoi(a2Sections[0]),
-				End:   util.MustAtoi(a2Sections[1]),
+				Start: mustAtoi(a2Sections[0]),
+				End:   mustAtoi(a2Sections[1]),
 			},
 		})
 	}
 
 	return res, s.Err()
+}
+
+func mustAtoi(s string) int {
+	v, _ := strconv.Atoi(s)
+	return v
 }
