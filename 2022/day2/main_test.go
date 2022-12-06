@@ -23,6 +23,8 @@ func TestRPS_Part1(t *testing.T) {
 			t.Error(err)
 		}
 
+		add2(p1)
+
 		result := RPS(p1, p2)
 
 		if result != tt.expected {

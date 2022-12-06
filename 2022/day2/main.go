@@ -19,9 +19,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	add2(p1)
+
 	result := RPS(p1, p2)
 
 	fmt.Println(result)
+}
+
+func add2(arr []rune) {
+	for i := range arr {
+		arr[i] += 2
+	}
 }
 
 func convertXYZAsOutcomes(p1, p2 []rune) {
@@ -59,7 +67,7 @@ func selectScore(r rune) int {
 }
 
 func roundScore(p1, p2 rune) int {
-	switch (p1 - p2 + 2) % 3 {
+	switch (p1 - p2) % 3 {
 	case 0:
 		fmt.Printf("%c %c: %c draws %c\n", p1, p2, p2, p1)
 		return 3
