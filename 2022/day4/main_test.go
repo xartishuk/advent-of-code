@@ -2,18 +2,21 @@ package main
 
 import "testing"
 
-func TestCampCleanupFull(t *testing.T) {
+func TestCampCleanup(t *testing.T) {
 	tests := []struct {
 		inputFile string
-		expected  int
+		full      int
+		partial   int
 	}{
 		{
 			inputFile: "input_test.txt",
-			expected:  2,
+			full:      2,
+			partial:   4,
 		},
 		{
 			inputFile: "input.txt",
-			expected:  305,
+			full:      305,
+			partial:   811,
 		},
 	}
 
@@ -23,10 +26,13 @@ func TestCampCleanupFull(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := CampCleanupFull(in)
+		full, partial := CampCleanup(in)
 
-		if result != tt.expected {
-			t.Errorf("expected %d, got %d", tt.expected, result)
+		if full != tt.full {
+			t.Errorf("expected %d, got %d", tt.full, full)
+		}
+		if partial != tt.partial {
+			t.Errorf("expected %d, got %d", tt.partial, partial)
 		}
 	}
 }

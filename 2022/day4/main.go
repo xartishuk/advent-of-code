@@ -10,26 +10,30 @@ import (
 )
 
 func main() {
-	in, err := readInput("input.txt")
+	in, err := readInput("input_test.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	result := CampCleanupFull(in)
+	full, partial := CampCleanup(in)
 
-	fmt.Println(result)
+	fmt.Println(full)
+	fmt.Println(partial)
 }
 
-func CampCleanupFull(pairs []AssignmentPair) int {
-	var total int
-
+func CampCleanup(pairs []AssignmentPair) (full, partial int) {
 	for _, pair := range pairs {
 		if pair.Contains() {
-			total++
+			full++
+			partial++
+			continue
+		}
+		if pair.Intersects() {
+			partial++
 		}
 	}
 
-	return total
+	return full, partial
 }
 
 type AssignmentPair struct {
@@ -38,7 +42,11 @@ type AssignmentPair struct {
 }
 
 func (p AssignmentPair) Contains() bool {
-	return p.A1.In(p.A2) || p.A2.In(p.A1)
+	return p.A1.IsIn(p.A2) || p.A2.IsIn(p.A1)
+}
+
+func (p AssignmentPair) Intersects() bool {
+	return p.A1.ContainsSection(p.A2.Start) || p.A2.ContainsSection(p.A1.Start)
 }
 
 type Assignment struct {
@@ -46,8 +54,12 @@ type Assignment struct {
 	End   int
 }
 
-func (a Assignment) In(b Assignment) bool {
+func (a Assignment) IsIn(b Assignment) bool {
 	return b.Start <= a.Start && a.End <= b.End
+}
+
+func (a Assignment) ContainsSection(s int) bool {
+	return a.Start <= s && s <= a.End
 }
 
 func readInput(filename string) ([]AssignmentPair, error) {
