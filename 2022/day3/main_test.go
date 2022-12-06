@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestRucksack(t *testing.T) {
+func TestIndividualRucksacks(t *testing.T) {
 	tests := []struct {
 		inputFile string
 		expected  int
@@ -23,7 +23,7 @@ func TestRucksack(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := Rucksack(in)
+		result := IndividualRucksacks(in)
 
 		if result != tt.expected {
 			t.Errorf("expected %d, got %d", tt.expected, result)

@@ -13,12 +13,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := Rucksack(lines)
+	result := IndividualRucksacks(lines)
 
 	fmt.Println(result)
 }
 
-func Rucksack(rucks []string) int {
+func IndividualRucksacks(rucks []string) int {
 	var total int
 
 	for _, ruck := range rucks {
