@@ -39,7 +39,7 @@ func readInput(filename string) ([]*stack.Stack, []Command, error) {
 				goto finishStack
 			}
 
-			s.Push(c)
+			s.Push(rune(c))
 		}
 
 	finishStack:
