@@ -62,9 +62,9 @@ func newCommand(s string) Command {
 	parts := commandLayout.FindStringSubmatch(s)
 
 	return Command{
-		amount: mustAtoi(parts[0]),
-		from:   mustAtoi(parts[1]),
-		to:     mustAtoi(parts[2]),
+		amount: mustAtoi(parts[1]),
+		from:   mustAtoi(parts[2]),
+		to:     mustAtoi(parts[3]),
 	}
 }
 
