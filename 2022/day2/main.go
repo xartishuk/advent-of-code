@@ -36,11 +36,11 @@ func convertXYZAsOutcomes(p1, p2 []rune) {
 	for i := range p2 {
 		switch p2[i] {
 		case 'X':
-			// TODO: +1
+			p2[i] = p1[i] - 1
 		case 'Y':
 			p2[i] = p1[i]
 		case 'Z':
-			// TODO: -1
+			p2[i] = p1[i] + 1
 		}
 	}
 }
