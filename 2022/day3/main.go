@@ -24,7 +24,7 @@ func IndividualRucksacks(rucks []string) int {
 	for _, ruck := range rucks {
 		ruck1, ruck2 := ruck[:len(ruck)/2], ruck[len(ruck)/2:]
 
-		catalog := catalogItems(ruck1)
+		catalog := catalog(ruck1)
 
 		t := findRepeatedType(catalog, ruck2)
 
@@ -39,9 +39,9 @@ func GroupRucksacks(rucks []string) int {
 
 	for i := 0; i < len(rucks); i += 3 {
 		groupCatalogue := combineCatalogues(
-			catalogItems(rucks[i]),
-			catalogItems(rucks[i+1]),
-			catalogItems(rucks[i+2]),
+			catalog(rucks[i]),
+			catalog(rucks[i+1]),
+			catalog(rucks[i+2]),
 		)
 
 		t := findGroupIdentifier(groupCatalogue)
@@ -74,11 +74,13 @@ func findGroupIdentifier(catalogue map[rune]int) rune {
 	panic("no group identifier found")
 }
 
-func catalogItems(ruck string) map[rune]struct{} {
+func catalog(ruck string) map[rune]struct{} {
 	catalog := make(map[rune]struct{}, len(ruck))
+	
 	for _, v := range ruck {
 		catalog[v] = struct{}{}
 	}
+
 	return catalog
 }
 
