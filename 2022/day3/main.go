@@ -13,7 +13,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := IndividualRucksacks(lines)
+	result := GroupRucksacks(lines)
 
 	fmt.Println(result)
 }
@@ -32,6 +32,46 @@ func IndividualRucksacks(rucks []string) int {
 	}
 
 	return total
+}
+
+func GroupRucksacks(rucks []string) int {
+	var total int
+
+	for i := 0; i < len(rucks); i += 3 {
+		groupCatalogue := combineCatalogues(
+			catalogItems(rucks[i]),
+			catalogItems(rucks[i+1]),
+			catalogItems(rucks[i+2]),
+		)
+
+		t := findGroupIdentifier(groupCatalogue)
+
+		total += priority(t)
+	}
+
+	return total
+}
+
+func combineCatalogues(cats ...map[rune]struct{}) map[rune]int {
+	group := make(map[rune]int, len(cats[0])*len(cats))
+
+	for _, cat := range cats {
+		for i := range cat {
+			group[i]++
+		}
+	}
+
+	return group
+}
+
+func findGroupIdentifier(catalogue map[rune]int) rune {
+	for t, encounters := range catalogue {
+		if encounters >= 3 {
+			return t
+		}
+	}
+
+	panic("no group identifier found")
 }
 
 func catalogItems(ruck string) map[rune]struct{} {

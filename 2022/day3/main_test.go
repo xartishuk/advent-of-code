@@ -30,3 +30,32 @@ func TestIndividualRucksacks(t *testing.T) {
 		}
 	}
 }
+
+func TestGroupRucksacks(t *testing.T) {
+	tests := []struct {
+		inputFile string
+		expected  int
+	}{
+		{
+			inputFile: "input_test.txt",
+			expected:  70,
+		},
+		{
+			inputFile: "input.txt",
+			expected:  2798,
+		},
+	}
+
+	for _, tt := range tests {
+		in, err := readInput(tt.inputFile)
+		if err != nil {
+			t.Error(err)
+		}
+
+		result := GroupRucksacks(in)
+
+		if result != tt.expected {
+			t.Errorf("expected %d, got %d", tt.expected, result)
+		}
+	}
+}
