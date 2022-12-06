@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/golang-collections/collections/stack"
 	"log"
+	"strings"
 )
 
 func main() {
@@ -18,7 +19,24 @@ func main() {
 }
 
 func SupplyStacks(crates []*stack.Stack, commands []Command) string {
-	return "CMZ"
+	for _, command := range commands {
+		command.ApplyOn(crates)
+	}
+
+	// collect top crates
+	var top strings.Builder
+
+	for _, c := range crates {
+		top.WriteRune(c.Peek().(rune))
+	}
+
+	return top.String()
+}
+
+func (c Command) ApplyOn(crates []*stack.Stack) {
+	for i := 0; i < c.amount; i++ {
+		crates[c.to-1].Push(crates[c.from-1].Pop())
+	}
 }
 
 type Command struct {

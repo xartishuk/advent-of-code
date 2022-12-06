@@ -13,7 +13,7 @@ func TestCampCleanup(t *testing.T) {
 		},
 		{
 			inputFile: "input.txt",
-			res:       "CMZ",
+			res:       "VQZNJMWTR",
 		},
 	}
 
