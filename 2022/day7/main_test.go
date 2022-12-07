@@ -16,7 +16,7 @@ func TestDeviceSpace(t *testing.T) {
 		{
 			inputFile:  "input.txt",
 			sumOver10k: 1749646,
-			deleteSize: -1,
+			deleteSize: 1498966,
 		},
 	}
 

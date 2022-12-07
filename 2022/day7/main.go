@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 )
 
@@ -18,20 +19,35 @@ func main() {
 	fmt.Println(deleteSize)
 }
 
-const sizeLimit = 100000
+const (
+	sizeLimit         = 100000
+	sizeThatCanRemain = 40000000
+)
 
 func DeviceSpace(root *Directory) (int, int) {
-	var res int
+	var sumOver10k int
 
 	fmt.Println(root.String(0))
 
-	for _, size := range root.ListDirectorySizes() {
+	sizes := root.ListDirectorySizes()
+
+	for _, size := range sizes {
 		if size <= sizeLimit {
-			res += size
+			sumOver10k += size
 		}
 	}
 
-	return res, 0
+	toDelete := sizes[0] - sizeThatCanRemain
+
+	sort.Ints(sizes)
+
+	for _, size := range sizes {
+		if size > toDelete {
+			return sumOver10k, size
+		}
+	}
+
+	panic("couldn't find size to delete")
 }
 
 type Directory struct {
