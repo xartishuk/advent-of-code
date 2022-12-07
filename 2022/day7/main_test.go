@@ -4,16 +4,19 @@ import "testing"
 
 func TestDeviceSpace(t *testing.T) {
 	tests := []struct {
-		inputFile string
-		expected  int
+		inputFile  string
+		sumOver10k int
+		deleteSize int
 	}{
 		{
-			inputFile: "input_test.txt",
-			expected:  95437,
+			inputFile:  "input_test.txt",
+			sumOver10k: 95437,
+			deleteSize: 24933642,
 		},
 		{
-			inputFile: "input.txt",
-			expected:  1749646,
+			inputFile:  "input.txt",
+			sumOver10k: 1749646,
+			deleteSize: -1,
 		},
 	}
 
@@ -23,10 +26,13 @@ func TestDeviceSpace(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := DeviceSpace(in)
+		sumOver10k, deleteSize := DeviceSpace(in)
 
-		if result != tt.expected {
-			t.Errorf("expected %d, got %d", tt.expected, result)
+		if sumOver10k != tt.sumOver10k {
+			t.Errorf("expected %d, got %d", tt.sumOver10k, sumOver10k)
+		}
+		if deleteSize != tt.deleteSize {
+			t.Errorf("expected %d, got %d", tt.deleteSize, deleteSize)
 		}
 	}
 }

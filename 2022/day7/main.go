@@ -12,14 +12,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := DeviceSpace(root)
+	sumOver10k, deleteSize := DeviceSpace(root)
 
-	fmt.Println(result)
+	fmt.Println(sumOver10k)
+	fmt.Println(deleteSize)
 }
 
 const sizeLimit = 100000
 
-func DeviceSpace(root *Directory) int {
+func DeviceSpace(root *Directory) (int, int) {
 	var res int
 
 	fmt.Println(root.String(0))
@@ -30,7 +31,7 @@ func DeviceSpace(root *Directory) int {
 		}
 	}
 
-	return res
+	return res, 0
 }
 
 type Directory struct {
