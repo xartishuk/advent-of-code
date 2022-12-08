@@ -20,7 +20,7 @@ func readInput(filename string) ([][]*Tree, error) {
 		var treeRow []*Tree
 
 		for _, t := range s.Text() {
-			treeRow = append(treeRow, &Tree{Height: digit(t)})
+			treeRow = append(treeRow, newTree(t))
 		}
 
 		trees = append(trees, treeRow)
@@ -31,4 +31,11 @@ func readInput(filename string) ([][]*Tree, error) {
 
 func digit(r rune) int {
 	return int(r) - 48
+}
+
+func newTree(t rune) *Tree {
+	return &Tree{
+		Height: digit(t),
+		Scenic: 1,
+	}
 }
