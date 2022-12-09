@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestTreeHouse(t *testing.T) {
+func TestRope(t *testing.T) {
 	tests := []struct {
 		inputFile string
 		length    int
