@@ -36,10 +36,10 @@ func TestRope(t *testing.T) {
 			t.Error(err)
 		}
 
-		visible := Rope(in, tt.length)
+		visited := Rope(in, tt.length)
 
-		if visible != tt.visited {
-			t.Errorf("expected %d, got %d", tt.visited, visible)
+		if visited != tt.visited {
+			t.Errorf("expected %d, got %d", tt.visited, visited)
 		}
 	}
 }
