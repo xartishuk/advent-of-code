@@ -56,7 +56,7 @@ func HillClimb(start, end *Point, grid [][]*Point) int {
 
 func discoverNeighbour(discovered *PointHeap, cur, neighbour *Point) {
 	// climbable
-	if cur.height+1 >= neighbour.height {
+	if cur.height-1 <= neighbour.height {
 		// path through cur is closer
 		if cur.g+1 < neighbour.g {
 			neighbour.g = cur.g + 1

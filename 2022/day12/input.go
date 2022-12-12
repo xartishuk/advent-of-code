@@ -29,10 +29,10 @@ func readInput(filename string) (start, end *Point, grid [][]*Point, err error) 
 			}
 
 			if h == 'S' {
-				start = p
+				end = p
 			}
 			if h == 'E' {
-				end = p
+				start = p
 			}
 
 			row = append(row, p)
@@ -41,9 +41,9 @@ func readInput(filename string) (start, end *Point, grid [][]*Point, err error) 
 		grid = append(grid, row)
 	}
 
-	start.height = 'a'
+	end.height = 'a'
+	start.height = 'z'
 	start.g = 0
-	end.height = 'z'
 
 	return start, end, grid, s.Err()
 }
