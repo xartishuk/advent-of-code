@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func readInput(filename string) ([]*Monkey, error) {
+func readInput(filename string, reduceWorry bool) ([]*Monkey, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -37,9 +37,10 @@ func readInput(filename string) ([]*Monkey, error) {
 
 		monkeys[i] = &Monkey{
 			inspector: Inspector{
-				op: inspectionParts[1],
-				l:  inspectionParts[0],
-				r:  inspectionParts[2],
+				op:          inspectionParts[1],
+				l:           inspectionParts[0],
+				r:           inspectionParts[2],
+				reduceWorry: reduceWorry,
 			},
 			tester: Tester{
 				divisibleBy: mustAtoi(strings.Split(lines[3], " ")[3]),

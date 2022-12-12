@@ -3,24 +3,30 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"sort"
 )
 
 func main() {
-	in, err := readInput("input_test.txt")
+	in, err := readInput("input_test.txt", false)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	visited := MonkeyBusiness(in)
+	visited := MonkeyBusiness(in, 10000)
 
 	fmt.Println(visited)
 }
 
-func MonkeyBusiness(monkeys []*Monkey) int {
-	for i := 0; i < 20; i++ {
+func MonkeyBusiness(monkeys []*Monkey, rounds int) int {
+	worryCap := 1
+	for _, monkey := range monkeys {
+		worryCap *= monkey.tester.divisibleBy
+	}
+
+	for i := 0; i < rounds; i++ {
 		for _, monkey := range monkeys {
-			monkey.Turn()
+			monkey.Turn(worryCap)
 		}
 	}
 
@@ -45,7 +51,7 @@ type Monkey struct {
 	monkeys []*Monkey
 }
 
-func (m *Monkey) Turn() {
+func (m *Monkey) Turn(worryCap int) {
 	for {
 		select {
 		case item := <-m.items:
@@ -53,7 +59,7 @@ func (m *Monkey) Turn() {
 
 			throwTo := m.tester.Test(item)
 
-			m.monkeys[throwTo].items <- item
+			m.monkeys[throwTo].items <- item % worryCap
 		default:
 			return
 		}
@@ -69,6 +75,8 @@ type Inspector struct {
 	l, r string
 
 	numOfInspections int
+
+	reduceWorry bool
 }
 
 func (i *Inspector) Inspect(old int) int {
@@ -87,14 +95,28 @@ func (i *Inspector) Inspect(old int) int {
 		r = mustAtoi(i.r)
 	}
 
+	var new int
+
 	switch i.op {
 	case "*":
-		return (l * r) / 3
+		new = l * r
 	case "+":
-		return (l + r) / 3
+		new = l + r
+	default:
+		panic("unknown op")
 	}
 
-	panic("unknown op")
+	if i.reduceWorry {
+		new /= 3
+	}
+
+	if i.l == "old" && i.r == "old" {
+		if old > math.MaxInt32 {
+			log.Printf("new = old * old: %d = %d * %d\n", new, old, old)
+		}
+	}
+
+	return new
 }
 
 type Tester struct {
