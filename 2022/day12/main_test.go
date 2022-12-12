@@ -4,16 +4,29 @@ import "testing"
 
 func TestDeviceSpace(t *testing.T) {
 	tests := []struct {
-		inputFile string
-		result    int
+		inputFile  string
+		AnyAWillDo bool
+		result     int
 	}{
 		{
-			inputFile: "input_test.txt",
-			result:    31,
+			inputFile:  "input_test.txt",
+			AnyAWillDo: false,
+			result:     31,
 		},
 		{
-			inputFile: "input.txt",
-			result:    412,
+			inputFile:  "input.txt",
+			AnyAWillDo: false,
+			result:     412,
+		},
+		{
+			inputFile:  "input_test.txt",
+			AnyAWillDo: true,
+			result:     29,
+		},
+		{
+			inputFile:  "input.txt",
+			AnyAWillDo: true,
+			result:     402,
 		},
 	}
 
@@ -22,6 +35,8 @@ func TestDeviceSpace(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+
+		AnyAWillDo = tt.AnyAWillDo
 
 		result := HillClimb(start, end, grid)
 

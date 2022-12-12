@@ -6,6 +6,9 @@ import (
 	"log"
 )
 
+// AnyAWillDo changes end goal and disables heuristics
+var AnyAWillDo = true
+
 func main() {
 	start, end, grid, err := readInput("input_test.txt")
 	if err != nil {
@@ -29,8 +32,14 @@ func HillClimb(start, end *Point, grid [][]*Point) int {
 	for {
 		cur := heap.Pop(discovered).(*Point)
 
-		if cur == end {
-			break
+		if AnyAWillDo {
+			if cur.height == int('a') {
+				return cur.g
+			}
+		} else {
+			if cur == end {
+				break
+			}
 		}
 
 		// down exists
@@ -81,7 +90,11 @@ type Point struct {
 
 // F score is start to end through this Point. F = g + heuristic(p, end)
 func (p *Point) F(to *Point) int {
-	return p.g + absDiff(to.i, p.i) + absDiff(to.j, p.j)
+	if AnyAWillDo {
+		return p.g
+	} else {
+		return p.g + absDiff(to.i, p.i) + absDiff(to.j, p.j)
+	}
 }
 
 func absDiff(x, y int) int {
