@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestDeviceSpace(t *testing.T) {
+func TestHillClimb(t *testing.T) {
 	tests := []struct {
 		inputFile  string
 		AnyAWillDo bool
