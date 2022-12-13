@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 )
 
 func main() {
@@ -11,12 +12,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := DistressSignal(in)
+	result := DistressSignalDecoder(in)
 
 	fmt.Println(result)
 }
 
-func DistressSignal(pairs []PacketPair) int {
+func DistressSignalPairs(pairs []PacketPair) int {
 	var sum int
 
 	for i := range pairs {
@@ -26,6 +27,36 @@ func DistressSignal(pairs []PacketPair) int {
 	}
 
 	return sum
+}
+
+func DistressSignalDecoder(pairs []PacketPair) int {
+	divider1 := &Set{arr: []SetMember{Set{arr: []SetMember{SetInt(2)}}}}
+	divider2 := &Set{arr: []SetMember{Set{arr: []SetMember{SetInt(6)}}}}
+
+	packets := make([]*Set, 0, (len(pairs)*2)+2)
+	packets = append(packets, divider1, divider2)
+
+	for i := range pairs {
+		packets = append(packets, &pairs[i].l)
+		packets = append(packets, &pairs[i].r)
+	}
+
+	sort.Slice(packets, func(i, j int) bool {
+		return packets[i].compare(*packets[j]) == -1
+	})
+
+	var i1, i2 int
+
+	for i := range packets {
+		if packets[i] == divider1 {
+			i1 = i + 1
+		}
+		if packets[i] == divider2 {
+			i2 = i + 1
+		}
+	}
+
+	return i1 * i2
 }
 
 type PacketPair struct {
