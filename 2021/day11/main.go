@@ -14,25 +14,33 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := OctopusFlashes(in)
+	flashes, firstSync := OctopusFlashes(in)
 
-	fmt.Println(result)
+	fmt.Println(flashes)
+	fmt.Println(firstSync)
 }
 
-func OctopusFlashes(grid [size][size]*Octopus) int {
+func OctopusFlashes(grid [size][size]*Octopus) (int, int) {
 	var flashes int
 
 	fmt.Printf("Before any steps:\n")
 	printGrid(grid)
 
-	for i := 0; i < 100; i++ {
-		flashes += round(grid)
+	for i := 0; ; i++ {
+		roundFlashes := round(grid)
 
 		fmt.Printf("After step %d:\n", i+1)
 		printGrid(grid)
-	}
 
-	return flashes
+		if i < 100 {
+			flashes += roundFlashes
+		}
+
+		// all flashed
+		if roundFlashes == size*size {
+			return flashes, i + 1
+		}
+	}
 }
 
 func round(grid [size][size]*Octopus) int {

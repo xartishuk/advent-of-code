@@ -5,15 +5,18 @@ import "testing"
 func TestOctopusFlashes(t *testing.T) {
 	tests := []struct {
 		inputFile string
-		result    int
+		flashes   int
+		firstSync int
 	}{
 		{
 			inputFile: "input_test.txt",
-			result:    1656,
+			flashes:   1656,
+			firstSync: 195,
 		},
 		{
 			inputFile: "input.txt",
-			result:    1785,
+			flashes:   1785,
+			firstSync: 354,
 		},
 	}
 
@@ -23,10 +26,13 @@ func TestOctopusFlashes(t *testing.T) {
 			t.Error(err)
 		}
 
-		result := OctopusFlashes(in)
+		flashes, firstSync := OctopusFlashes(in)
 
-		if result != tt.result {
-			t.Errorf("expected %d, got %d", tt.result, result)
+		if flashes != tt.flashes {
+			t.Errorf("expected %d, got %d", tt.flashes, flashes)
+		}
+		if firstSync != tt.firstSync {
+			t.Errorf("expected %d, got %d", tt.firstSync, firstSync)
 		}
 	}
 }
