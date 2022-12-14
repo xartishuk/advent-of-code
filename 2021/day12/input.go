@@ -40,9 +40,6 @@ func readInput(filename string) (*Cave, *Cave, error) {
 			caves[pair[1]] = r
 		}
 
-		l.neighbours = append(l.neighbours, r)
-		r.neighbours = append(r.neighbours, l)
-
 		if l.name == "start" {
 			start = l
 		}
@@ -54,6 +51,13 @@ func readInput(filename string) (*Cave, *Cave, error) {
 		}
 		if r.name == "end" {
 			end = r
+		}
+
+		if r != start {
+			l.neighbours = append(l.neighbours, r)
+		}
+		if l != start {
+			r.neighbours = append(r.neighbours, l)
 		}
 	}
 

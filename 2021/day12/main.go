@@ -11,13 +11,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := CavePaths(start, end)
+	result := CavePaths(start, end, true)
 
 	fmt.Println(result)
 }
 
-func CavePaths(start, end *Cave) int {
-	return start.PathsTo(map[string]struct{}{}, end)
+func CavePaths(start, end *Cave, allowRepeatOnce bool) int {
+	navigator := &Navigator{
+		visited:         map[string]struct{}{},
+		allowRepeatOnce: allowRepeatOnce,
+	}
+
+	return navigator.PathsTo(start, end)
 }
 
 type Cave struct {
@@ -27,22 +32,50 @@ type Cave struct {
 	neighbours []*Cave
 }
 
-func (c *Cave) PathsTo(smallVisited map[string]struct{}, to *Cave) int {
-	if c == to {
+type Navigator struct {
+	visited map[string]struct{}
+
+	allowRepeatOnce bool
+	repeatedOnce    *Cave
+}
+
+func (n *Navigator) PathsTo(from, to *Cave) int {
+	if from == to {
 		return 1
 	}
 
-	if c.isSmall {
-		smallVisited[c.name] = struct{}{}
-		defer delete(smallVisited, c.name)
+	if from.isSmall {
+		n.visited[from.name] = struct{}{}
 	}
 
 	var sum int
-	for _, neighbour := range c.neighbours {
-		if _, ok := smallVisited[neighbour.name]; ok {
-			continue
+	for _, neighbour := range from.neighbours {
+		if _, ok := n.visited[neighbour.name]; ok {
+			// already been to that small cave
+			if n.allowRepeatOnce && n.repeatedOnce == nil {
+				// but allowed to repeat and haven't repeated yet
+				// so just mark this cave as repeated
+				n.repeatedOnce = neighbour
+			} else {
+				// not allowed to repeat or already repeated - skipping
+				continue
+			}
 		}
-		sum += neighbour.PathsTo(smallVisited, to)
+
+		sum += n.PathsTo(neighbour, to)
+
+		// reset repeated
+		if neighbour == n.repeatedOnce {
+			n.repeatedOnce = nil
+		}
+	}
+
+	if from.isSmall {
+		if from == n.repeatedOnce {
+			n.repeatedOnce = nil
+		} else {
+			delete(n.visited, from.name)
+		}
 	}
 
 	return sum
