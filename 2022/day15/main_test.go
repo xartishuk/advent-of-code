@@ -19,7 +19,7 @@ func TestBeaconExclusionZone(t *testing.T) {
 			inputFile: "input.txt",
 			y:         2000000,
 			excluded:  5256611,
-			beacon:    1,
+			beacon:    13337919186981,
 		},
 	}
 
