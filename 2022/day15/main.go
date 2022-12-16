@@ -101,6 +101,7 @@ func findBeacon(sensors []Sensor, size int) (int, int) {
 		}
 	}
 
+	// 28.752.159
 	fmt.Printf("number of possible beacons: %d\n", len(possibleBeacons))
 
 nextBeacon:
