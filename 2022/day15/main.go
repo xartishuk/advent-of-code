@@ -6,21 +6,36 @@ import (
 )
 
 func main() {
-	in, err := readInput("input_test.txt")
+	in, err := readInput("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	result := BeaconExclusionZone(in, 10)
+	excluded, beacon := BeaconExclusionZone(in, 2000000)
 
-	fmt.Println(result)
+	fmt.Println(excluded)
+	fmt.Println(beacon)
 }
 
-func BeaconExclusionZone(sensors []Sensor, y int) int {
+func BeaconExclusionZone(sensors []Sensor, y int) (int, int) {
 	excluded := map[int]struct{}{}
 
 	x, maxX := xBounds(sensors)
 
+	fmt.Printf("x bound: %d..%d\n", x, maxX)
+	//for _, s := range sensors {
+	//	overlap := s.beaconDistance - s.DistanceToCoordinates(s.x, y)
+	//	if overlap >= 0 {
+	//		fmt.Printf("sensor %d.%d\t->\t%d.%d\treaches y=%d with beacon distance %d\toverlaps on %d\n", s.x, s.y, s.beacon.x, s.beacon.y, y, s.beaconDistance, overlap)
+	//		fmt.Printf("overlap: %d..%d\n", s.x-overlap, s.x+overlap)
+	//		for x := s.x - overlap; x <= s.x+overlap; x++ {
+	//			excluded[x] = struct{}{}
+	//		}
+	//	} else {
+	//		fmt.Printf("sensor %d.%d\t->\t%d.%d\tDOESN'T reach y=%d with beacon distance %d\toverlaps on %d\n", s.x, s.y, s.beacon.x, s.beacon.y, y, s.beaconDistance, overlap)
+	//	}
+	//}
+	//
 	for ; x <= maxX; x++ {
 		for _, s := range sensors {
 			if s.DistanceToCoordinates(x, y) <= s.beaconDistance {
