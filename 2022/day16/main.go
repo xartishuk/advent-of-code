@@ -21,11 +21,7 @@ func PressureReleaseSolo(valves map[string]*Valve) int {
 }
 
 func PressureReleaseDuet(valves map[string]*Valve) int {
-	res := make(chan int, 1)
-
-	NewDecisionPoint(valves, 26).MaxRelease(res)
-
-	return <-res
+	return NewDecisionPoint(valves, 26).MaxRelease()
 }
 
 func NewSolver(valves map[string]*Valve) *Solver {
@@ -168,7 +164,7 @@ type DecisionPoint struct {
 	time int
 }
 
-func (p *DecisionPoint) MaxRelease(result chan<- int) {
+func (p *DecisionPoint) MaxRelease() int {
 	//fmt.Printf("new DP: time=%d\tactor1 will %v %s in %d\tactor2 will %v %s in %d\n",
 	//	p.time,
 	//	p.actor1.action, p.actor1.pos.name, p.actor1.busyTime,
@@ -176,8 +172,7 @@ func (p *DecisionPoint) MaxRelease(result chan<- int) {
 	//)
 
 	if p.time <= 1 {
-		result <- 0
-		return
+		return 0
 	}
 
 	if !p.actor1.IsReady() && !p.actor2.IsReady() {
@@ -477,13 +472,8 @@ func (p *DecisionPoint) MaxRelease(result chan<- int) {
 		}
 	}
 
-	results := make(chan int, len(decisionPoints)+1)
-
 	for _, p := range decisionPoints {
-		go p.MaxRelease(results)
-	}
-	for range decisionPoints {
-		release := <-results
+		release := p.MaxRelease()
 		if release > max {
 			max = release
 		}
@@ -491,7 +481,7 @@ func (p *DecisionPoint) MaxRelease(result chan<- int) {
 
 	//fmt.Printf("returning: %d+%d=%d\n", this, max, this+max)
 
-	result <- this + max
+	return this + max
 }
 
 func (p *DecisionPoint) Copy(actor1, actor2 Actor, time int) *DecisionPoint {
